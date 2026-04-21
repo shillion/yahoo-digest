@@ -1,19 +1,18 @@
 import json
-from datetime import date, datetime
+from datetime import datetime, timedelta
 from pathlib import Path
 
 STATE_DIR = Path.home() / ".yahoo-digest"
 STATE_FILE = STATE_DIR / "state.json"
 
 
-def ran_today() -> bool:
-    if not STATE_FILE.exists():
-        return False
-    data = json.loads(STATE_FILE.read_text())
-    last_run = data.get("last_run")
-    if not last_run:
-        return False
-    return datetime.fromisoformat(last_run).date() == date.today()
+def last_run() -> datetime:
+    if STATE_FILE.exists():
+        data = json.loads(STATE_FILE.read_text())
+        ts = data.get("last_run")
+        if ts:
+            return datetime.fromisoformat(ts)
+    return datetime.now() - timedelta(days=1)
 
 
 def save_run() -> None:

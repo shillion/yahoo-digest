@@ -1,5 +1,4 @@
 import os
-from datetime import date, timedelta
 
 from dotenv import load_dotenv
 
@@ -7,23 +6,26 @@ from src.yahoo_digest.classifier import classify_emails
 from src.yahoo_digest.digest import build_digest
 from src.yahoo_digest.email_client import fetch_recent_emails
 from src.yahoo_digest.sender import send_digest
-from src.yahoo_digest.state import ran_today, save_run
+from src.yahoo_digest.state import last_run, save_run
 
 load_dotenv()
 
 
 def main() -> None:
-    if ran_today():
-        print("Already ran today. Exiting.")
-        return
+    since = last_run()
+    save_run()
 
     emails = fetch_recent_emails(
         host="imap.mail.yahoo.com",
         user=os.environ["YAHOO_USER"],
         password=os.environ["YAHOO_APP_PASSWORD"],
-        since=date.today() - timedelta(days=1),
+        since=since,
     )
-    print(f"Fetched {len(emails)} emails.")
+    print(f"Fetched {len(emails)} emails since {since}.")
+
+    if not emails:
+        print("Nothing new.")
+        return
 
     classifications = classify_emails(emails)
     digest = build_digest(emails, classifications)
@@ -36,7 +38,6 @@ def main() -> None:
         body=digest,
     )
     print("Digest sent.")
-    save_run()
 
 
 if __name__ == "__main__":
