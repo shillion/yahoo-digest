@@ -4,8 +4,6 @@ from anthropic import Anthropic
 
 from .email_client import Email
 
-client = Anthropic()
-
 SYSTEM_PROMPT = """You are an email classifier. Given a list of emails, classify each one.
 Return a JSON array with one object per email, in the same order.
 Each object must have:
@@ -14,9 +12,12 @@ Each object must have:
   - "reason": one sentence explaining why (only for important/action-required, else null)
   - "summary": one sentence summary (only for important/action-required, else null)
 
-Classify as "important" if it's from a real person or contains genuinely useful info (e.g. a bill, a shipping notice, a friend).
+Classify as "important" if it's from a real person or contains genuinely useful info
+(e.g. a bill, a shipping notice, a friend).
 Classify as "action-required" if something needs a response, payment, or decision.
 Be aggressive about classifying marketing and newsletters as "newsletter" and junk as "spam".
+Ignore emails sent to a broad audience, including newsletters, mass event invites, and
+general notices — classify these as "newsletter".
 Return only the JSON array — no explanation, no markdown."""
 
 
@@ -24,6 +25,7 @@ BATCH_SIZE = 10
 
 
 def _classify_batch(emails: list[Email]) -> list[dict]:
+    client = Anthropic()
     email_list = [
         {"uid": e.uid, "from": e.from_, "subject": e.subject, "body": e.body[:500]}
         for e in emails

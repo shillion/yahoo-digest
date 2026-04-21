@@ -3,13 +3,13 @@ from datetime import date, timedelta
 
 from dotenv import load_dotenv
 
-load_dotenv()
-
 from src.yahoo_digest.classifier import classify_emails
 from src.yahoo_digest.digest import build_digest
 from src.yahoo_digest.email_client import fetch_recent_emails
 from src.yahoo_digest.sender import send_digest
 from src.yahoo_digest.state import ran_today, save_run
+
+load_dotenv()
 
 
 def main() -> None:
