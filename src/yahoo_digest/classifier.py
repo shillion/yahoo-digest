@@ -15,7 +15,8 @@ Each object must have:
 Classify as "important" if it's from a real person or contains genuinely useful info
 (e.g. a bill, a shipping notice, a friend).
 Classify as "action-required" if something needs a response, payment, or decision.
-Be aggressive about classifying marketing and newsletters as "newsletter" and junk as "spam".
+Be aggressive about classifying marketing, political emails, solicitations,
+and newsletters as "newsletter" and junk as "spam".
 Ignore emails sent to a broad audience, including newsletters, mass event invites, and
 general notices — classify these as "newsletter".
 Return only the JSON array — no explanation, no markdown."""
