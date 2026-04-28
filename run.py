@@ -1,4 +1,5 @@
 import os
+from datetime import datetime
 
 from dotenv import load_dotenv
 
@@ -13,7 +14,7 @@ load_dotenv()
 
 def main() -> None:
     since = last_run()
-    save_run()
+    run_time = datetime.now()
 
     emails = fetch_recent_emails(
         host="imap.mail.yahoo.com",
@@ -24,6 +25,7 @@ def main() -> None:
     print(f"Fetched {len(emails)} emails since {since}.")
 
     if not emails:
+        save_run(run_time)
         print("Nothing new.")
         return
 
@@ -37,6 +39,7 @@ def main() -> None:
         to_address=os.environ["GMAIL_USER"],
         body=digest,
     )
+    save_run(run_time)
     print("Digest sent.")
 
 

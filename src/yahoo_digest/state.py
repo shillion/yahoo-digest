@@ -15,6 +15,6 @@ def last_run() -> datetime:
     return datetime.now() - timedelta(days=1)
 
 
-def save_run() -> None:
+def save_run(ts: datetime) -> None:
     STATE_DIR.mkdir(exist_ok=True)
-    STATE_FILE.write_text(json.dumps({"last_run": datetime.now().isoformat()}))
+    STATE_FILE.write_text(json.dumps({"last_run": ts.isoformat()}))
